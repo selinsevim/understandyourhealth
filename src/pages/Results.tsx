@@ -7,6 +7,7 @@ import OverallSummaryBanner from "@/components/OverallSummaryBanner";
 import ReportCard from "@/components/ReportCard";
 import QuestionCard from "@/components/QuestionCard";
 import ResultsDonutChart from "@/components/ResultsDonutChart";
+import CategoryHeader from "@/components/CategoryHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";

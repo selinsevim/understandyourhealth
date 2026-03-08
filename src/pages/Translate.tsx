@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { FileText, Upload as UploadIcon, Sparkles } from "lucide-react";
+import { FileText, Upload as UploadIcon, Sparkles, Globe } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";
@@ -8,11 +8,26 @@ import { supabase } from "@/integrations/supabase/client";
 
 const SAMPLE_REPORT = `CBC Results: WBC 7.2 K/uL (ref 4.5-11.0), RBC 4.8 M/uL (ref 4.2-5.4), Hemoglobin 14.2 g/dL (ref 13.5-17.5), Hematocrit 42% (ref 41-53), Platelets 320 K/uL (ref 150-400). Lipid Panel: Total Cholesterol 215 mg/dL (ref <200), LDL 142 mg/dL (ref <100), HDL 45 mg/dL (ref >40), Triglycerides 140 mg/dL (ref <150). TSH 2.1 mIU/L (ref 0.4-4.0).`;
 
+const LANGUAGES = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "tr", label: "Türkçe", flag: "🇹🇷" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "de", label: "Deutsch", flag: "🇩🇪" },
+  { code: "ar", label: "العربية", flag: "🇸🇦" },
+  { code: "zh", label: "中文", flag: "🇨🇳" },
+  { code: "pt", label: "Português", flag: "🇧🇷" },
+  { code: "ru", label: "Русский", flag: "🇷🇺" },
+  { code: "ja", label: "日本語", flag: "🇯🇵" },
+  { code: "ko", label: "한국어", flag: "🇰🇷" },
+];
+
 const Translate = () => {
   const [tab, setTab] = useState<"paste" | "upload">("paste");
   const [reportText, setReportText] = useState("");
   const [age, setAge] = useState("");
   const [conditions, setConditions] = useState("");
+  const [language, setLanguage] = useState("en");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -31,7 +46,7 @@ const Translate = () => {
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke("translate-report", {
-        body: { reportText: reportText.trim(), age, conditions },
+        body: { reportText: reportText.trim(), age, conditions, language },
       });
 
       if (fnError) throw fnError;
@@ -114,6 +129,29 @@ const Translate = () => {
           ) : (
             <UploadDropzone onFileSelect={() => {}} />
           )}
+        </div>
+
+        {/* Language selector */}
+        <div className="mt-6">
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-foreground">
+            <Globe className="h-4 w-4 text-primary" />
+            Output language
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => setLanguage(lang.code)}
+                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                  language === lang.code
+                    ? "border-primary bg-primary/10 text-primary shadow-sm"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                }`}
+              >
+                {lang.flag} {lang.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Optional context */}

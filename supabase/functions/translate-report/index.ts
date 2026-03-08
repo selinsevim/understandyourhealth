@@ -5,7 +5,14 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const systemPrompt = `You are a compassionate medical translator. Your job is to take medical lab results or doctor notes and translate them into simple, warm, friendly language that a patient with no medical background can understand.
+const getSystemPrompt = (language: string) => {
+  const langInstruction = language && language !== "en"
+    ? `IMPORTANT: You MUST write ALL text content (overallSummary, sectionName, testName, simpleExplanation, detailedExplanation, keyTakeaways, questionsForDoctor, actionItems) in ${language}. Keep originalName, value, normalRange, and JSON keys in English.`
+    : "Write all explanations in English.";
+
+  return `You are a compassionate medical translator. Your job is to take medical lab results or doctor notes and translate them into simple, warm, friendly language that a patient with no medical background can understand.
+
+${langInstruction}
 
 Return a JSON object with this exact structure:
 {
@@ -13,15 +20,15 @@ Return a JSON object with this exact structure:
   "overallSummary": "A friendly 2-3 sentence overview of the whole report",
   "sections": [
     {
-      "sectionName": "Plain English section name",
+      "sectionName": "Plain language section name",
       "items": [
         {
-          "testName": "Plain English test name",
+          "testName": "Plain language test name",
           "originalName": "Original medical name",
           "value": "Patient's value with units",
           "normalRange": "Normal range",
           "status": "normal" | "watch" | "concern",
-          "simpleExplanation": "One sentence in plain English",
+          "simpleExplanation": "One sentence in plain language",
           "detailedExplanation": "2-3 sentences with more context"
         }
       ]
@@ -33,12 +40,13 @@ Return a JSON object with this exact structure:
 }
 
 Be warm, reassuring, and never alarmist. If something needs attention, say so clearly but calmly. Return ONLY valid JSON, no markdown fences.`;
+};
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { reportText, age, conditions } = await req.json();
+    const { reportText, age, conditions, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -55,7 +63,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: getSystemPrompt(language || "en") },
           { role: "user", content: userMessage },
         ],
       }),

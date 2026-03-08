@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Translate from "./pages/Translate";
 import Results from "./pages/Results";
 import History from "./pages/History";
+import FamilyMembers from "./pages/FamilyMembers";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 

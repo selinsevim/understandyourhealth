@@ -236,10 +236,45 @@ const Translate = () => {
           </div>
         </div>
 
+        {/* Member selector */}
+        {user && members.length > 0 && (
+          <div className="mt-6">
+            <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-foreground">
+              <Users className="h-4 w-4 text-primary" />
+              Who is this report for?
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => handleMemberSelect("")}
+                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                  selectedMemberId === ""
+                    ? "border-primary bg-primary/10 text-primary shadow-sm"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                }`}
+              >
+                Myself
+              </button>
+              {members.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => handleMemberSelect(m.id)}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                    selectedMemberId === m.id
+                      ? "border-primary bg-primary/10 text-primary shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  }`}
+                >
+                  {m.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Optional context */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">Your age (optional)</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Age (optional)</label>
             <input
               type="text"
               value={age}

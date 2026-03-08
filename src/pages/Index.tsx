@@ -41,7 +41,7 @@ const Index = () => {
             </div>
             <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Understand your health results —{" "}
-              <span className="text-primary">finally.</span>
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-hero)" }}>finally.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
               Paste your lab report or doctor notes. We'll explain everything in plain English — like a caring friend who happens to be a doctor.

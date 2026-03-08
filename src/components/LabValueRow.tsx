@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import StatusBadge from "./StatusBadge";
+import LabValueGauge from "./LabValueGauge";
 
 interface LabItem {
   testName: string;

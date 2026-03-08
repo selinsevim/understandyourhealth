@@ -213,7 +213,15 @@ const History = () => {
                       <div className="flex items-center gap-3 overflow-hidden">
                         <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
                         <div className="min-w-0">
-                          <p className="truncate font-medium text-card-foreground">{report.title}</p>
+                          <p className="truncate font-medium text-card-foreground">
+                            {report.title}
+                            {getMemberName(report.member_id) && (
+                              <span className="ml-2 inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-xs font-normal text-muted-foreground">
+                                <Users className="h-3 w-3" />
+                                {getMemberName(report.member_id)}
+                              </span>
+                            )}
+                          </p>
                           <p className="text-xs text-muted-foreground">
                             {format(new Date(report.created_at), "MMM d, yyyy · h:mm a")}
                           </p>

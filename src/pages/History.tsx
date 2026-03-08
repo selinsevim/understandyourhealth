@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Clock, FileText, Trash2, Eye } from "lucide-react";
+import { Clock, FileText, Trash2, Eye, Users } from "lucide-react";
 import { format } from "date-fns";
 import Navbar from "@/components/Navbar";
 import StatusBadge from "@/components/StatusBadge";
@@ -9,12 +9,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface FamilyMember {
+  id: string;
+  name: string;
+}
+
 interface Report {
   id: string;
   title: string;
   overall_status: string;
   created_at: string;
   result: any;
+  member_id: string | null;
 }
 
 const statusPriority: Record<string, number> = { concern: 0, watch: 1, normal: 2, all_clear: 2 };
@@ -46,6 +52,8 @@ const History = () => {
   const { user, loading: authLoading } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState<FamilyMember[]>([]);
+  const [filterMember, setFilterMember] = useState<string>("all");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,15 +62,22 @@ const History = () => {
       setLoading(false);
       return;
     }
-    const fetchReports = async () => {
-      const { data, error } = await supabase
-        .from("reports")
-        .select("id, title, overall_status, created_at, result")
-        .order("created_at", { ascending: false });
-      if (!error && data) setReports(data);
+    const fetchData = async () => {
+      const [reportsRes, membersRes] = await Promise.all([
+        supabase
+          .from("reports")
+          .select("id, title, overall_status, created_at, result, member_id")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("family_members")
+          .select("id, name")
+          .order("created_at", { ascending: true }),
+      ]);
+      if (!reportsRes.error && reportsRes.data) setReports(reportsRes.data);
+      if (!membersRes.error && membersRes.data) setMembers(membersRes.data);
       setLoading(false);
     };
-    fetchReports();
+    fetchData();
   }, [user, authLoading]);
 
   const handleView = (report: Report) => {
@@ -80,17 +95,28 @@ const History = () => {
     }
   };
 
+  const getMemberName = (memberId: string | null) => {
+    if (!memberId) return null;
+    return members.find((m) => m.id === memberId)?.name || null;
+  };
+
+  // Filter reports by selected member
+  const filteredReports = filterMember === "all"
+    ? reports
+    : filterMember === "myself"
+    ? reports.filter((r) => !r.member_id)
+    : reports.filter((r) => r.member_id === filterMember);
+
   // Group reports by category
   const groupedByCategory = (() => {
     const map = new Map<string, Report[]>();
-    reports.forEach((report) => {
+    filteredReports.forEach((report) => {
       const cats = getReportCategories(report);
       cats.forEach((cat) => {
         if (!map.has(cat)) map.set(cat, []);
         map.get(cat)!.push(report);
       });
     });
-    // Sort categories by worst status
     return [...map.entries()].sort((a, b) => {
       const aStatus = getWorstStatus(a[1]);
       const bStatus = getWorstStatus(b[1]);
@@ -135,7 +161,46 @@ const History = () => {
             </p>
           </div>
         ) : (
-          <div className="mt-8 space-y-6">
+          <>
+            {/* Member filter */}
+            {members.length > 0 && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                <button
+                  onClick={() => setFilterMember("all")}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                    filterMember === "all"
+                      ? "border-primary bg-primary/10 text-primary shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setFilterMember("myself")}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                    filterMember === "myself"
+                      ? "border-primary bg-primary/10 text-primary shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  Myself
+                </button>
+                {members.map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => setFilterMember(m.id)}
+                    className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                      filterMember === m.id
+                        ? "border-primary bg-primary/10 text-primary shadow-sm"
+                        : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    {m.name}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="mt-6 space-y-6">
             {groupedByCategory.map(([category, catReports]) => (
               <div key={category} className="space-y-3">
                 <CategoryHeader category={category} status={getWorstStatus(catReports)} />
@@ -148,7 +213,15 @@ const History = () => {
                       <div className="flex items-center gap-3 overflow-hidden">
                         <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
                         <div className="min-w-0">
-                          <p className="truncate font-medium text-card-foreground">{report.title}</p>
+                          <p className="truncate font-medium text-card-foreground">
+                            {report.title}
+                            {getMemberName(report.member_id) && (
+                              <span className="ml-2 inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-xs font-normal text-muted-foreground">
+                                <Users className="h-3 w-3" />
+                                {getMemberName(report.member_id)}
+                              </span>
+                            )}
+                          </p>
                           <p className="text-xs text-muted-foreground">
                             {format(new Date(report.created_at), "MMM d, yyyy · h:mm a")}
                           </p>
@@ -174,7 +247,8 @@ const History = () => {
                 </div>
               </div>
             ))}
-          </div>
+            </div>
+          </>
         )}
       </div>
     </div>

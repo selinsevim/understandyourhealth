@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { FileText, Upload as UploadIcon, Sparkles, Globe } from "lucide-react";
+import { FileText, Upload as UploadIcon, Sparkles, Globe, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import * as pdfjsLib from "pdfjs-dist";
 
@@ -25,6 +26,13 @@ const LANGUAGES = [
   { code: "ko", label: "한국어", flag: "🇰🇷" },
 ];
 
+interface FamilyMember {
+  id: string;
+  name: string;
+  age: string | null;
+  conditions: string | null;
+}
+
 const Translate = () => {
   const [tab, setTab] = useState<"paste" | "upload">("paste");
   const [reportText, setReportText] = useState("");
@@ -34,14 +42,45 @@ const Translate = () => {
   const [loading, setLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [members, setMembers] = useState<FamilyMember[]>([]);
+  const [selectedMemberId, setSelectedMemberId] = useState<string>("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (searchParams.get("sample") === "true") {
       setReportText(SAMPLE_REPORT);
     }
   }, [searchParams]);
+
+  // Fetch family members
+  useEffect(() => {
+    if (!user) return;
+    const fetch = async () => {
+      const { data } = await supabase
+        .from("family_members")
+        .select("id, name, age, conditions")
+        .order("created_at", { ascending: true });
+      if (data) setMembers(data);
+    };
+    fetch();
+  }, [user]);
+
+  // Auto-fill age/conditions when member selected
+  const handleMemberSelect = (memberId: string) => {
+    setSelectedMemberId(memberId);
+    if (memberId === "") {
+      setAge("");
+      setConditions("");
+      return;
+    }
+    const member = members.find((m) => m.id === memberId);
+    if (member) {
+      setAge(member.age || "");
+      setConditions(member.conditions || "");
+    }
+  };
 
   const handleFileSelect = useCallback(async (file: File) => {
     setPdfLoading(true);
@@ -86,9 +125,11 @@ const Translate = () => {
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
 
-      // Store result and report text in sessionStorage for results page
+      // Store result, report text, and member_id in sessionStorage for results page
       sessionStorage.setItem("medmind_result", JSON.stringify(data));
       sessionStorage.setItem("medmind_report_text", reportText.trim());
+      if (selectedMemberId) sessionStorage.setItem("medmind_member_id", selectedMemberId);
+      else sessionStorage.removeItem("medmind_member_id");
       navigate("/results");
     } catch (err: any) {
       console.error("Translation error:", err);
@@ -195,10 +236,45 @@ const Translate = () => {
           </div>
         </div>
 
+        {/* Member selector */}
+        {user && members.length > 0 && (
+          <div className="mt-6">
+            <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-foreground">
+              <Users className="h-4 w-4 text-primary" />
+              Who is this report for?
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => handleMemberSelect("")}
+                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                  selectedMemberId === ""
+                    ? "border-primary bg-primary/10 text-primary shadow-sm"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                }`}
+              >
+                Myself
+              </button>
+              {members.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => handleMemberSelect(m.id)}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                    selectedMemberId === m.id
+                      ? "border-primary bg-primary/10 text-primary shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  }`}
+                >
+                  {m.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Optional context */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">Your age (optional)</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Age (optional)</label>
             <input
               type="text"
               value={age}

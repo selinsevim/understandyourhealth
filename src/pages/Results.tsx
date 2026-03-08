@@ -65,6 +65,11 @@ const Results = () => {
           <OverallSummaryBanner status={result.overallStatus} summary={result.overallSummary} />
         </motion.div>
 
+        {/* Donut Chart */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-6">
+          <ResultsDonutChart sections={result.sections} />
+        </motion.div>
+
         {/* Report Sections */}
         <div className="mt-8 space-y-6">
           {result.sections.map((section, i) => (

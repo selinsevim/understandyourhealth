@@ -153,7 +153,8 @@ const Results = () => {
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link
             to="/translate"
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:shadow-lg"
+            style={{ backgroundImage: "var(--gradient-button)" }}
           >
             <RefreshCw className="h-4 w-4" />
             Translate Another Report

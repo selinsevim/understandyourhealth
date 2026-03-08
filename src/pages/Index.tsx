@@ -41,7 +41,7 @@ const Index = () => {
             </div>
             <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Understand your health results —{" "}
-              <span className="text-primary">finally.</span>
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-hero)" }}>finally.</span>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
               Paste your lab report or doctor notes. We'll explain everything in plain English — like a caring friend who happens to be a doctor.
@@ -49,7 +49,8 @@ const Index = () => {
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link
                 to="/translate"
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-3.5 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/25">
+                className="inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/25"
+                style={{ backgroundImage: "var(--gradient-button)" }}>
                 
                 Translate My Report
                 <ArrowRight className="h-5 w-5" />
@@ -70,7 +71,7 @@ const Index = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mx-auto mt-16 max-w-2xl">
             
-            <div className="relative rounded-2xl border border-border bg-card p-6 shadow-lg">
+            <div className="relative rounded-2xl border border-border bg-card p-6 shadow-lg" style={{ background: "var(--gradient-soft)", borderColor: "hsl(var(--purple-glow) / 0.2)" }}>
               <div className="flex items-center gap-4">
                 <div className="flex-1 rounded-lg bg-muted p-4">
                   <p className="font-mono text-xs text-muted-foreground">
@@ -111,7 +112,7 @@ const Index = () => {
               transition={{ delay: i * 0.15 }}
               className="rounded-2xl border border-border bg-card p-6 shadow-sm">
               
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ backgroundImage: "var(--gradient-soft)" }}>
                   <f.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="font-display text-lg font-semibold text-card-foreground">{f.title}</h3>

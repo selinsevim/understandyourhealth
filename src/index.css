@@ -38,6 +38,11 @@
     --input: 48 14% 88%;
     --ring: 168 84% 32%;
 
+    --purple-glow: 275 100% 81%;
+    --gradient-hero: linear-gradient(135deg, hsl(168, 84%, 32%), hsl(275, 100%, 81%));
+    --gradient-button: linear-gradient(135deg, hsl(168, 84%, 32%), hsl(260, 80%, 65%));
+    --gradient-soft: linear-gradient(135deg, hsl(168, 84%, 32%, 0.1), hsl(275, 100%, 81%, 0.1));
+
     --radius: 0.75rem;
 
     --font-display: 'Fraunces', serif;
@@ -77,6 +82,11 @@
     --border: 220 16% 20%;
     --input: 220 16% 20%;
     --ring: 168 76% 42%;
+
+    --purple-glow: 275 100% 75%;
+    --gradient-hero: linear-gradient(135deg, hsl(168, 76%, 42%), hsl(275, 100%, 75%));
+    --gradient-button: linear-gradient(135deg, hsl(168, 76%, 42%), hsl(260, 70%, 60%));
+    --gradient-soft: linear-gradient(135deg, hsl(168, 76%, 42%, 0.15), hsl(275, 100%, 75%, 0.15));
   }
 }
 

@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      family_members: {
+        Row: {
+          age: string | null
+          conditions: string | null
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          age?: string | null
+          conditions?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          age?: string | null
+          conditions?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -39,6 +66,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          member_id: string | null
           overall_status: string
           report_text: string
           result: Json
@@ -48,6 +76,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          member_id?: string | null
           overall_status?: string
           report_text: string
           result: Json
@@ -57,13 +86,22 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          member_id?: string | null
           overall_status?: string
           report_text?: string
           result?: Json
           title?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reports_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

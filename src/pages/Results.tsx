@@ -80,6 +80,23 @@ const Results = () => {
     }
   };
 
+  const statusPriority = { concern: 0, watch: 1, normal: 2 };
+
+  const sortedSections = result
+    ? result.sections
+        .map((section) => ({
+          ...section,
+          items: [...section.items].sort(
+            (a, b) => statusPriority[a.status] - statusPriority[b.status]
+          ),
+        }))
+        .sort((a, b) => {
+          const aMin = Math.min(...a.items.map((i) => statusPriority[i.status]));
+          const bMin = Math.min(...b.items.map((i) => statusPriority[i.status]));
+          return aMin - bMin;
+        })
+    : [];
+
   if (!result) return null;
 
   return (

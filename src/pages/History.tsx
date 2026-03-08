@@ -161,7 +161,46 @@ const History = () => {
             </p>
           </div>
         ) : (
-          <div className="mt-8 space-y-6">
+          <>
+            {/* Member filter */}
+            {members.length > 0 && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                <button
+                  onClick={() => setFilterMember("all")}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                    filterMember === "all"
+                      ? "border-primary bg-primary/10 text-primary shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setFilterMember("myself")}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                    filterMember === "myself"
+                      ? "border-primary bg-primary/10 text-primary shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  Myself
+                </button>
+                {members.map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => setFilterMember(m.id)}
+                    className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                      filterMember === m.id
+                        ? "border-primary bg-primary/10 text-primary shadow-sm"
+                        : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    {m.name}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="mt-6 space-y-6">
             {groupedByCategory.map(([category, catReports]) => (
               <div key={category} className="space-y-3">
                 <CategoryHeader category={category} status={getWorstStatus(catReports)} />

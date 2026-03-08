@@ -174,6 +174,7 @@ const Translate = () => {
     }
   };
 
+  if (loading) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />

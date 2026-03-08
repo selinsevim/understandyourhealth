@@ -45,7 +45,6 @@ const Translate = () => {
   const [error, setError] = useState<string | null>(null);
   const [members, setMembers] = useState<FamilyMember[]>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<string>("");
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [isDemo, setIsDemo] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();

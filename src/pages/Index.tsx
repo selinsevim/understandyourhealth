@@ -138,10 +138,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { stat: "80%", label: "of patients struggle to understand their lab results", source: "AMA" },
-              { stat: "15 min", label: "average doctor visit — not enough to explain every result", source: "CDC" },
-              { stat: "77%", label: "of patients use the internet to search health info", source: "Pew Research" },
-              { stat: "47%", label: "report anxiety after receiving unexplained lab results", source: "BMJ" },
+              { stat: "80%", label: "of patients struggle to understand their lab results", source: "AMA", url: "https://www.ama-assn.org/delivering-care/patient-support-advocacy/health-literacy" },
+              { stat: "15 min", label: "average doctor visit — not enough to explain every result", source: "CDC", url: "https://www.cdc.gov/nchs/fastats/physician-visits.htm" },
+              { stat: "77%", label: "of patients use the internet to search health info", source: "Pew Research", url: "https://www.pewresearch.org/internet/fact-sheet/internet-broadband/" },
+              { stat: "47%", label: "report anxiety after receiving unexplained lab results", source: "BMJ", url: "https://www.bmj.com/content/350/bmj.g7624" },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -152,7 +152,7 @@ const Index = () => {
                 className="text-center">
                 <p className="font-display text-4xl font-bold text-primary">{item.stat}</p>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.label}</p>
-                <p className="mt-1 text-xs text-muted-foreground/60">— {item.source}</p>
+                <a href={item.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-primary/60 underline underline-offset-2 hover:text-primary transition-colors">— {item.source}</a>
               </motion.div>
             ))}
           </div>

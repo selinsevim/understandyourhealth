@@ -131,71 +131,69 @@ const Index = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* Smooth transition to problem section */}
-        <div className="h-32" style={{ background: "linear-gradient(180deg, hsl(var(--background)), hsl(160 40% 95%))" }} />
       </section>
 
       {/* The Problem + Statistics */}
-      <section className="py-20" style={{ background: "linear-gradient(180deg, hsl(160 40% 95%), hsl(155 35% 93%), hsl(160 30% 94%), hsl(165 35% 95%))" }}>
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mx-auto max-w-2xl text-center mb-14">
-            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-              The problem is clear
-            </h2>
-            <p className="mt-4 text-muted-foreground text-lg">
-              Millions of people receive lab results they can't understand — and the system isn't built to help.
-            </p>
-          </motion.div>
+      <section className="pt-0 pb-0">
+        <div className="h-32" style={{ background: "linear-gradient(180deg, hsl(var(--background)), hsl(160 40% 95%))" }} />
+        <div className="py-20" style={{ background: "hsl(160 40% 95%)" }}>
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mx-auto max-w-2xl text-center mb-14">
+              <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+                The problem is clear
+              </h2>
+              <p className="mt-4 text-muted-foreground text-lg">
+                Millions of people receive lab results they can't understand — and the system isn't built to help.
+              </p>
+            </motion.div>
 
-          {/* Stats row */}
-          <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-14">
-            {[
-              { stat: "80%", label: "of patients struggle to understand their lab results", source: "JMIR", url: "https://www.jmir.org/2020/12/e18725/" },
-              { stat: "15 min", label: "average doctor visit — not enough to explain every result", source: "CDC", url: "https://www.cdc.gov/nchs/fastats/physician-visits.htm" },
-              { stat: "77%", label: "of patients use the internet to search health info", source: "Pew Research", url: "https://www.pewresearch.org/internet/fact-sheet/internet-broadband/" },
-              { stat: "47%", label: "report anxiety after receiving unexplained lab results", source: "BMJ", url: "https://www.bmj.com/content/350/bmj.g7624" },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="text-center">
-                <p className="font-display text-4xl font-bold text-foreground">{item.stat}</p>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.label}</p>
-                <a href={item.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-primary/60 underline underline-offset-2 hover:text-primary transition-colors">— {item.source}</a>
-              </motion.div>
-            ))}
-          </div>
+            {/* Stats row */}
+            <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-14">
+              {[
+                { stat: "80%", label: "of patients struggle to understand their lab results", source: "JMIR", url: "https://www.jmir.org/2020/12/e18725/" },
+                { stat: "15 min", label: "average doctor visit — not enough to explain every result", source: "CDC", url: "https://www.cdc.gov/nchs/fastats/physician-visits.htm" },
+                { stat: "77%", label: "of patients use the internet to search health info", source: "Pew Research", url: "https://www.pewresearch.org/internet/fact-sheet/internet-broadband/" },
+                { stat: "47%", label: "report anxiety after receiving unexplained lab results", source: "BMJ", url: "https://www.bmj.com/content/350/bmj.g7624" },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="text-center">
+                  <p className="font-display text-4xl font-bold text-foreground">{item.stat}</p>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.label}</p>
+                  <a href={item.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-primary/60 underline underline-offset-2 hover:text-primary transition-colors">— {item.source}</a>
+                </motion.div>
+              ))}
+            </div>
 
-          {/* Problem cards */}
-          <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
-            {problems.map((p, i) =>
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="rounded-2xl border p-6" style={{ borderColor: "hsl(160 40% 70% / 0.25)", background: "linear-gradient(135deg, hsl(160 30% 97%), hsl(155 25% 95%))" }}>
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "hsl(160 35% 90%)" }}>
-                  <p.icon className="h-6 w-6" style={{ color: "hsl(160 50% 40%)" }} />
-                </div>
-                <h3 className="font-display text-lg font-semibold text-card-foreground">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
-              </motion.div>
-            )}
+            {/* Problem cards */}
+            <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
+              {problems.map((p, i) =>
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15 }}
+                  className="rounded-2xl border p-6" style={{ borderColor: "hsl(160 40% 70% / 0.25)", background: "linear-gradient(135deg, hsl(160 30% 97%), hsl(155 25% 95%))" }}>
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "hsl(160 35% 90%)" }}>
+                    <p.icon className="h-6 w-6" style={{ color: "hsl(160 50% 40%)" }} />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold text-card-foreground">{p.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
+                </motion.div>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Smooth transition to solution section */}
-        <div className="h-32" style={{ background: "linear-gradient(180deg, transparent, hsl(var(--background)))" }} />
+        <div className="h-32" style={{ background: "linear-gradient(180deg, hsl(160 40% 95%), hsl(var(--background)))" }} />
       </section>
 
       {/* Features / Solution */}

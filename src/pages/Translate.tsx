@@ -174,56 +174,6 @@ const Translate = () => {
     }
   };
 
-  const handleSubscribe = async (priceId: string) => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-    setCheckoutLoading(true);
-    setError(null);
-    try {
-      const { data, error: fnError } = await supabase.functions.invoke("create-checkout", {
-        body: { priceId },
-      });
-      if (fnError) throw fnError;
-      if (data?.error) throw new Error(data.error);
-      if (data?.url) {
-        const link = document.createElement("a");
-        link.href = data.url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (err: any) {
-      console.error("Checkout error:", err);
-      setError("Could not start the checkout process. Please try again.");
-    } finally {
-      setCheckoutLoading(false);
-    }
-  };
-
-  const handleManageSubscription = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke("customer-portal");
-      if (error) throw error;
-      if (data?.url) {
-        const link = document.createElement("a");
-        link.href = data.url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (err: any) {
-      console.error("Portal error:", err);
-      setError("Could not open subscription management. Please try again.");
-    }
-  };
-
-  if (loading) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />

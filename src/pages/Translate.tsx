@@ -4,7 +4,7 @@ import { FileText, Upload as UploadIcon, Sparkles, Globe, Users, CreditCard, Cro
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";
-import { useAuth, TIERS, TierKey } from "@/contexts/AuthContext";
+import { useAuth, TIERS } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import * as pdfjsLib from "pdfjs-dist";
 import { DEMO_RESULT } from "@/data/demoResult";

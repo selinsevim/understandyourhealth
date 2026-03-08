@@ -216,7 +216,8 @@ const Translate = () => {
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
       if (data?.url) {
-        window.location.href = data.url;
+        window.open(data.url, "_blank");
+        setPaymentLoading(false);
       }
     } catch (err: any) {
       console.error("Payment error:", err);

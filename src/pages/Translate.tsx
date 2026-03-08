@@ -201,6 +201,12 @@ const Translate = () => {
   const handleTranslate = async () => {
     if (!reportText.trim()) return;
 
+    // Demo mode: translate for free with the sample report
+    if (isDemo && reportText.trim() === SAMPLE_REPORT.trim()) {
+      handleTranslateAfterPayment();
+      return;
+    }
+
     if (!user) {
       navigate("/auth");
       return;

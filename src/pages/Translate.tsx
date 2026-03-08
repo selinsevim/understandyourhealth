@@ -32,6 +32,7 @@ const Translate = () => {
   const [conditions, setConditions] = useState("");
   const [language, setLanguage] = useState("en");
   const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

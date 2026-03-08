@@ -455,64 +455,15 @@ const Translate = () => {
             : "🔒 Your report is processed securely and never stored without your permission."}
         </p>
 
-        {/* Subscription plans — show if not subscribed and not demo */}
+        {/* Subscription prompt for non-subscribers */}
         {!isDemo && user && !subscribed && (
-          <div className="mt-12">
-            <h2 className="text-center text-xl font-bold text-foreground">Choose Your Plan</h2>
-            <p className="mt-2 text-center text-sm text-muted-foreground">
-              Subscribe to start translating your medical reports.
+          <div className="mt-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              You need a subscription to translate reports.{" "}
+              <Link to="/pricing" className="font-medium text-primary hover:underline">
+                View plans →
+              </Link>
             </p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {(Object.entries(TIERS) as [TierKey & string, typeof TIERS[keyof typeof TIERS]][]).map(
-                ([key, tier]) => (
-                  <div
-                    key={key}
-                    className={`relative rounded-2xl border p-6 transition-all ${
-                      key === "premium"
-                        ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
-                        : "border-border bg-card"
-                    }`}
-                  >
-                    {key === "premium" && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-0.5 text-xs font-semibold text-primary-foreground">
-                        Most Popular
-                      </span>
-                    )}
-                    <h3 className="text-lg font-bold text-foreground">{tier.name}</h3>
-                    <p className="mt-1 text-2xl font-bold text-foreground">
-                      {tier.price}
-                      <span className="text-sm font-normal text-muted-foreground">/month</span>
-                    </p>
-                    <p className="mt-2 text-sm text-muted-foreground">{tier.description}</p>
-                    <ul className="mt-4 space-y-2">
-                      <li className="flex items-center gap-2 text-sm text-foreground">
-                        <Check className="h-4 w-4 text-primary" />
-                        {tier.limit === Infinity ? "Unlimited" : tier.limit} translations/month
-                      </li>
-                      <li className="flex items-center gap-2 text-sm text-foreground">
-                        <Check className="h-4 w-4 text-primary" />
-                        All languages supported
-                      </li>
-                      <li className="flex items-center gap-2 text-sm text-foreground">
-                        <Check className="h-4 w-4 text-primary" />
-                        Family member profiles
-                      </li>
-                    </ul>
-                    <button
-                      onClick={() => handleSubscribe(tier.price_id)}
-                      disabled={checkoutLoading}
-                      className={`mt-6 w-full rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                        key === "premium"
-                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90"
-                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                      } disabled:opacity-50 disabled:cursor-not-allowed`}
-                    >
-                      {checkoutLoading ? "Redirecting…" : `Subscribe to ${tier.name}`}
-                    </button>
-                  </div>
-                )
-              )}
-            </div>
           </div>
         )}
 

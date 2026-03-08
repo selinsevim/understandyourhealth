@@ -46,7 +46,7 @@ const Translate = () => {
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke("translate-report", {
-        body: { reportText: reportText.trim(), age, conditions },
+        body: { reportText: reportText.trim(), age, conditions, language },
       });
 
       if (fnError) throw fnError;

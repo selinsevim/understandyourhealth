@@ -161,7 +161,12 @@ const Translate = () => {
               </button>
             </div>
           ) : (
-            <UploadDropzone onFileSelect={() => {}} />
+            <UploadDropzone onFileSelect={handleFileSelect} />
+            {pdfLoading && (
+              <p className="mt-3 text-center text-sm text-muted-foreground animate-pulse">
+                Extracting text from PDF…
+              </p>
+            )}
           )}
         </div>
 

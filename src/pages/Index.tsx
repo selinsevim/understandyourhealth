@@ -193,11 +193,11 @@ const Index = () => {
             </div>
           </div>
         </div>
-        <div className="h-32" style={{ background: "linear-gradient(180deg, hsl(160 40% 95%), hsl(var(--background)))" }} />
+        <div className="h-16" style={{ background: "linear-gradient(180deg, hsl(160 40% 95%), hsl(var(--background)))" }} />
       </section>
 
       {/* Features / Solution */}
-      <section className="py-20">
+      <section className="py-14">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

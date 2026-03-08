@@ -164,7 +164,7 @@ const Index = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className="text-center">
-                <p className="font-display text-4xl font-bold bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(135deg, hsl(270 70% 55%), hsl(280 80% 65%))" }}>{item.stat}</p>
+                <p className="font-display text-4xl font-bold text-foreground">{item.stat}</p>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.label}</p>
                 <a href={item.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-primary/60 underline underline-offset-2 hover:text-primary transition-colors">— {item.source}</a>
               </motion.div>

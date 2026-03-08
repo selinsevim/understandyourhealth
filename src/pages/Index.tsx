@@ -133,19 +133,65 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features */}
+      {/* The Problem */}
+      <section className="border-t border-border py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mx-auto max-w-2xl text-center mb-12">
+            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+              The problem is clear
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg">
+              Millions of people receive lab results they can't understand — and the system isn't built to help.
+            </p>
+          </motion.div>
+          <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
+            {problems.map((p, i) =>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+                className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-destructive/10">
+                  <p.icon className="h-6 w-6 text-destructive" />
+                </div>
+                <h3 className="font-display text-lg font-semibold text-card-foreground">{p.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Features / Solution */}
       <section className="border-t border-border bg-muted/30 py-20">
         <div className="container mx-auto px-4">
-          <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mx-auto max-w-2xl text-center mb-12">
+            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+              How MedMind helps
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg">
+              We translate your reports into plain language — so you can understand your health and take action.
+            </p>
+          </motion.div>
+          <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f, i) =>
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ backgroundImage: "var(--gradient-soft)" }}>
                   <f.icon className="h-6 w-6 text-primary" />
                 </div>

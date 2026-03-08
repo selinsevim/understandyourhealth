@@ -10,6 +10,7 @@ import Results from "./pages/Results";
 import History from "./pages/History";
 import FamilyMembers from "./pages/FamilyMembers";
 import Appointments from "./pages/Appointments";
+import Pricing from "./pages/Pricing";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 

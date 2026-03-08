@@ -19,11 +19,6 @@ const features = [
     title: "Ask Your Doctor",
     description: "Auto-generated questions to bring to your next appointment.",
   },
-  {
-    icon: MapPin,
-    title: "Find Doctors Near You",
-    description: "Locate nearby specialists based on your results with one click.",
-  },
 ];
 
 const Index = () => {

@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Translate from "./pages/Translate";
 import Results from "./pages/Results";
 import History from "./pages/History";
+import DoctorsNearMe from "./pages/DoctorsNearMe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

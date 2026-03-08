@@ -4,6 +4,7 @@ import { Clock, FileText, Trash2, Eye } from "lucide-react";
 import { format } from "date-fns";
 import Navbar from "@/components/Navbar";
 import StatusBadge from "@/components/StatusBadge";
+import CategoryHeader from "@/components/CategoryHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -15,6 +16,31 @@ interface Report {
   created_at: string;
   result: any;
 }
+
+const statusPriority: Record<string, number> = { concern: 0, watch: 1, normal: 2, all_clear: 2 };
+
+const getReportCategories = (report: Report): string[] => {
+  const sections = report.result?.sections;
+  if (!Array.isArray(sections)) return ["Other"];
+  const cats = new Set<string>();
+  sections.forEach((s: any) => cats.add(s.category || "Other"));
+  return cats.size > 0 ? [...cats] : ["Other"];
+};
+
+const getWorstStatus = (reports: Report[]): "normal" | "watch" | "concern" => {
+  let worst = 2;
+  reports.forEach((r) => {
+    const sections = r.result?.sections;
+    if (!Array.isArray(sections)) return;
+    sections.forEach((s: any) => {
+      s.items?.forEach((item: any) => {
+        const p = statusPriority[item.status] ?? 2;
+        if (p < worst) worst = p;
+      });
+    });
+  });
+  return worst === 0 ? "concern" : worst === 1 ? "watch" : "normal";
+};
 
 const History = () => {
   const { user, loading: authLoading } = useAuth();
@@ -54,6 +80,24 @@ const History = () => {
     }
   };
 
+  // Group reports by category
+  const groupedByCategory = (() => {
+    const map = new Map<string, Report[]>();
+    reports.forEach((report) => {
+      const cats = getReportCategories(report);
+      cats.forEach((cat) => {
+        if (!map.has(cat)) map.set(cat, []);
+        map.get(cat)!.push(report);
+      });
+    });
+    // Sort categories by worst status
+    return [...map.entries()].sort((a, b) => {
+      const aStatus = getWorstStatus(a[1]);
+      const bStatus = getWorstStatus(b[1]);
+      return (statusPriority[aStatus] ?? 2) - (statusPriority[bStatus] ?? 2);
+    });
+  })();
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -91,35 +135,42 @@ const History = () => {
             </p>
           </div>
         ) : (
-          <div className="mt-8 space-y-3">
-            {reports.map((report) => (
-              <div
-                key={report.id}
-                className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50"
-              >
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
-                  <div className="min-w-0">
-                    <p className="truncate font-medium text-card-foreground">{report.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {format(new Date(report.created_at), "MMM d, yyyy · h:mm a")}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <StatusBadge status={report.overall_status as any} />
-                  <button
-                    onClick={() => handleView(report)}
-                    className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(report.id)}
-                    className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
+          <div className="mt-8 space-y-6">
+            {groupedByCategory.map(([category, catReports]) => (
+              <div key={category} className="space-y-3">
+                <CategoryHeader category={category} status={getWorstStatus(catReports)} />
+                <div className="space-y-2 pl-0 sm:pl-2">
+                  {catReports.map((report) => (
+                    <div
+                      key={report.id}
+                      className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50"
+                    >
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <FileText className="h-5 w-5 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0">
+                          <p className="truncate font-medium text-card-foreground">{report.title}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(report.created_at), "MMM d, yyyy · h:mm a")}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <StatusBadge status={report.overall_status as any} />
+                        <button
+                          onClick={() => handleView(report)}
+                          className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(report.id)}
+                          className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}

@@ -64,11 +64,13 @@ const Results = () => {
     setSaving(true);
     try {
       const reportText = sessionStorage.getItem("medmind_report_text") || "Imported report";
+      const memberId = sessionStorage.getItem("medmind_member_id") || null;
       const { error } = await supabase.from("reports").insert({
         user_id: user.id,
         report_text: reportText,
         result: result as any,
         overall_status: result.overallStatus,
+        member_id: memberId,
         title: result.sections[0]?.sectionName || "Lab Report",
       });
       if (error) throw error;

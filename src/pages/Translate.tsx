@@ -131,6 +131,29 @@ const Translate = () => {
           )}
         </div>
 
+        {/* Language selector */}
+        <div className="mt-6">
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-foreground">
+            <Globe className="h-4 w-4 text-primary" />
+            Output language
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => setLanguage(lang.code)}
+                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                  language === lang.code
+                    ? "border-primary bg-primary/10 text-primary shadow-sm"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                }`}
+              >
+                {lang.flag} {lang.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Optional context */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <div>

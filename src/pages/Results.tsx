@@ -120,7 +120,7 @@ const Results = () => {
         </motion.div>
 
         <div className="mt-8 space-y-6">
-          {result.sections.map((section, i) => (
+          {sortedSections.map((section, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
               <ReportCard section={section} />
             </motion.div>

@@ -131,8 +131,6 @@ const Index = () => {
             </div>
           </motion.div>
         </div>
-
-        </div>
       </section>
 
       {/* The Problem + Statistics */}

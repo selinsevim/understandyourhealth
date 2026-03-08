@@ -7,6 +7,7 @@ import UploadDropzone from "@/components/UploadDropzone";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import * as pdfjsLib from "pdfjs-dist";
+import { DEMO_RESULT } from "@/data/demoResult";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 

@@ -132,12 +132,12 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* Smooth gradient transition to problem section */}
-        <div className="h-24" style={{ background: "linear-gradient(180deg, hsl(var(--background)), hsl(270 60% 96%))" }} />
+        {/* Smooth transition to problem section */}
+        <div className="h-32" style={{ background: "linear-gradient(180deg, hsl(var(--background)), hsl(160 40% 95%))" }} />
       </section>
 
       {/* The Problem + Statistics */}
-      <section className="py-20" style={{ background: "linear-gradient(180deg, hsl(270 60% 96%), hsl(270 50% 94%), hsl(270 40% 95%))" }}>
+      <section className="py-20" style={{ background: "linear-gradient(180deg, hsl(160 40% 95%), hsl(155 35% 93%), hsl(160 30% 94%), hsl(165 35% 95%))" }}>
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -183,9 +183,9 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="rounded-2xl border p-6" style={{ borderColor: "hsl(270 60% 70% / 0.25)", background: "linear-gradient(135deg, hsl(270 60% 97%), hsl(280 50% 95%))" }}>
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "hsl(270 60% 90%)" }}>
-                  <p.icon className="h-6 w-6" style={{ color: "hsl(270 70% 50%)" }} />
+                className="rounded-2xl border p-6" style={{ borderColor: "hsl(160 40% 70% / 0.25)", background: "linear-gradient(135deg, hsl(160 30% 97%), hsl(155 25% 95%))" }}>
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "hsl(160 35% 90%)" }}>
+                  <p.icon className="h-6 w-6" style={{ color: "hsl(160 50% 40%)" }} />
                 </div>
                 <h3 className="font-display text-lg font-semibold text-card-foreground">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
@@ -194,12 +194,12 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Smooth gradient transition to solution section */}
-        <div className="h-32" style={{ background: "linear-gradient(180deg, transparent, hsl(270 30% 96%))" }} />
+        {/* Smooth transition to solution section */}
+        <div className="h-32" style={{ background: "linear-gradient(180deg, transparent, hsl(var(--background)))" }} />
       </section>
 
       {/* Features / Solution */}
-      <section className="py-20" style={{ background: "linear-gradient(180deg, hsl(270 30% 96%), hsl(var(--muted) / 0.3), hsl(var(--background)))" }}>
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

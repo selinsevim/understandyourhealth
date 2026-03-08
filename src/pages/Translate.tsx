@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { FileText, Upload as UploadIcon, Sparkles, Globe, Users, CreditCard } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
@@ -46,6 +46,7 @@ const Translate = () => {
   const [selectedMemberId, setSelectedMemberId] = useState<string>("");
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
@@ -99,6 +100,10 @@ const Translate = () => {
   useEffect(() => {
     if (searchParams.get("sample") === "true") {
       setReportText(SAMPLE_REPORT);
+    }
+    if (searchParams.get("demo") === "true") {
+      setReportText(SAMPLE_REPORT);
+      setIsDemo(true);
     }
   }, [searchParams]);
 
@@ -196,6 +201,12 @@ const Translate = () => {
   const handleTranslate = async () => {
     if (!reportText.trim()) return;
 
+    // Demo mode: translate for free with the sample report
+    if (isDemo && reportText.trim() === SAMPLE_REPORT.trim()) {
+      handleTranslateAfterPayment();
+      return;
+    }
+
     if (!user) {
       navigate("/auth");
       return;
@@ -246,12 +257,26 @@ const Translate = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto max-w-2xl px-4 py-12">
+        {/* Demo banner */}
+        {isDemo && (
+          <div className="mb-6 rounded-xl border border-primary/20 bg-primary/5 p-4 text-center">
+            <p className="text-sm font-medium text-primary">
+              🎉 Free Demo Mode — Try a sample report to see how MedMind works!
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              No payment or sign-up required for the demo.
+            </p>
+          </div>
+        )}
+
         <div className="text-center">
           <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-            Translate Your Report
+            {isDemo ? "Try the Demo" : "Translate Your Report"}
           </h1>
           <p className="mt-3 text-muted-foreground">
-            Paste your lab results or doctor notes below. We'll explain everything in plain English.
+            {isDemo
+              ? "See how we turn confusing lab results into plain, friendly language."
+              : "Paste your lab results or doctor notes below. We'll explain everything in plain English."}
           </p>
         </div>
 
@@ -401,13 +426,35 @@ const Translate = () => {
           disabled={!reportText.trim() || paymentLoading}
           className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <CreditCard className="h-5 w-5" />
-          {paymentLoading ? "Redirecting to payment…" : "Translate My Report — €1.00"}
+          {isDemo ? (
+            <>
+              <Sparkles className="h-5 w-5" />
+              Try Demo — Free
+            </>
+          ) : (
+            <>
+              <CreditCard className="h-5 w-5" />
+              {paymentLoading ? "Redirecting to payment…" : "Translate My Report — €1.00"}
+            </>
+          )}
         </button>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          🔒 Secure payment via Stripe. Your report is processed securely and never stored without your permission.
+          {isDemo
+            ? "🔒 Your data is processed securely. This demo uses a sample report."
+            : "🔒 Secure payment via Stripe. Your report is processed securely and never stored without your permission."}
         </p>
+
+        {!isDemo && (
+          <div className="mt-4 text-center">
+            <Link
+              to="/translate?demo=true"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Not sure? Try a free demo first →
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

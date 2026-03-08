@@ -112,7 +112,7 @@ const Index = () => {
               transition={{ delay: i * 0.15 }}
               className="rounded-2xl border border-border bg-card p-6 shadow-sm">
               
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ backgroundImage: "var(--gradient-soft)" }}>
                   <f.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="font-display text-lg font-semibold text-card-foreground">{f.title}</h3>

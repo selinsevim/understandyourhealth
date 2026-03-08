@@ -195,11 +195,11 @@ const Index = () => {
         </div>
 
         {/* Smooth gradient transition to solution section */}
-        <div className="h-24" style={{ background: "linear-gradient(180deg, transparent, hsl(var(--muted) / 0.3))" }} />
+        <div className="h-32" style={{ background: "linear-gradient(180deg, transparent, hsl(270 30% 96%))" }} />
       </section>
 
       {/* Features / Solution */}
-      <section className="bg-muted/30 py-20">
+      <section className="py-20" style={{ background: "linear-gradient(180deg, hsl(270 30% 96%), hsl(var(--muted) / 0.3), hsl(var(--background)))" }}>
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

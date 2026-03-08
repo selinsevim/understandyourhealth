@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { FileText, Upload as UploadIcon, Sparkles, Globe, Users, CreditCard, Crown, Check } from "lucide-react";
+import { FileText, Upload as UploadIcon, Sparkles, Globe, Users, CreditCard, Crown } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";

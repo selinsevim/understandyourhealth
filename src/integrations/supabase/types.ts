@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          appointment_date: string
+          created_at: string
+          doctor_name: string
+          id: string
+          location: string | null
+          member_id: string | null
+          notes: string | null
+          remind_before_hours: number
+          reminder_sent: boolean
+          specialty: string | null
+          user_id: string
+        }
+        Insert: {
+          appointment_date: string
+          created_at?: string
+          doctor_name: string
+          id?: string
+          location?: string | null
+          member_id?: string | null
+          notes?: string | null
+          remind_before_hours?: number
+          reminder_sent?: boolean
+          specialty?: string | null
+          user_id: string
+        }
+        Update: {
+          appointment_date?: string
+          created_at?: string
+          doctor_name?: string
+          id?: string
+          location?: string | null
+          member_id?: string | null
+          notes?: string | null
+          remind_before_hours?: number
+          reminder_sent?: boolean
+          specialty?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       family_members: {
         Row: {
           age: string | null

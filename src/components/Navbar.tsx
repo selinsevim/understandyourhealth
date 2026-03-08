@@ -14,6 +14,7 @@ const Navbar = () => {
     { to: "/", label: "Home" },
     { to: "/translate", label: "Translate" },
     { to: "/history", label: "History" },
+    { to: "/family", label: "Family" },
   ];
 
   const handleSignOut = async () => {

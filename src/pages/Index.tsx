@@ -62,7 +62,7 @@ const Index = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="container mx-auto px-4 pb-20 pt-16 sm:pt-24">
+        <div className="container mx-auto px-4 pb-12 pt-16 sm:pt-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

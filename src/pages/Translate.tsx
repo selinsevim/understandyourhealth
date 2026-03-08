@@ -27,6 +27,7 @@ const Translate = () => {
   const [reportText, setReportText] = useState("");
   const [age, setAge] = useState("");
   const [conditions, setConditions] = useState("");
+  const [language, setLanguage] = useState("en");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();

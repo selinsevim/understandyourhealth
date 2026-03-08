@@ -9,12 +9,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+interface FamilyMember {
+  id: string;
+  name: string;
+}
+
 interface Report {
   id: string;
   title: string;
   overall_status: string;
   created_at: string;
   result: any;
+  member_id: string | null;
 }
 
 const statusPriority: Record<string, number> = { concern: 0, watch: 1, normal: 2, all_clear: 2 };

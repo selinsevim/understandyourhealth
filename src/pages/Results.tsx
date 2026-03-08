@@ -16,6 +16,7 @@ interface TranslationResult {
   overallStatus: "all_clear" | "watch" | "concern";
   overallSummary: string;
   sections: {
+    category?: string;
     sectionName: string;
     items: {
       testName: string;

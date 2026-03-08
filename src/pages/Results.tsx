@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import OverallSummaryBanner from "@/components/OverallSummaryBanner";
 import ReportCard from "@/components/ReportCard";
 import QuestionCard from "@/components/QuestionCard";
+import ResultsDonutChart from "@/components/ResultsDonutChart";
 
 interface TranslationResult {
   overallStatus: "all_clear" | "watch" | "concern";
@@ -62,6 +63,11 @@ const Results = () => {
         {/* Overall Summary */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <OverallSummaryBanner status={result.overallStatus} summary={result.overallSummary} />
+        </motion.div>
+
+        {/* Donut Chart */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-6">
+          <ResultsDonutChart sections={result.sections} />
         </motion.div>
 
         {/* Report Sections */}

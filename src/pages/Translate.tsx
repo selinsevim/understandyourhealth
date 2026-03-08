@@ -402,7 +402,7 @@ const Translate = () => {
           className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <CreditCard className="h-5 w-5" />
-          {paymentLoading ? "Redirecting to payment…" : "Translate My Report — €1.50"}
+          {paymentLoading ? "Redirecting to payment…" : "Translate My Report — €1.00"}
         </button>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">

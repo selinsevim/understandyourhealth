@@ -20,6 +20,7 @@ Return a JSON object with this exact structure:
   "overallSummary": "A friendly 2-3 sentence overview of the whole report",
   "sections": [
     {
+      "category": "One of: Cardiovascular, Respiratory, Metabolic, Hematology, Hepatic, Renal, Thyroid, Gynecological, Immunology, Musculoskeletal, Neurological, Nutritional, Other",
       "sectionName": "Plain language section name",
       "items": [
         {
@@ -38,6 +39,8 @@ Return a JSON object with this exact structure:
   "questionsForDoctor": ["question 1", "question 2"],
   "actionItems": ["action 1", "action 2"]
 }
+
+Assign each section to the most appropriate category from the list. If unsure, use "Other".
 
 Be warm, reassuring, and never alarmist. If something needs attention, say so clearly but calmly. Return ONLY valid JSON, no markdown fences.`;
 };

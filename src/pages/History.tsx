@@ -95,17 +95,28 @@ const History = () => {
     }
   };
 
+  const getMemberName = (memberId: string | null) => {
+    if (!memberId) return null;
+    return members.find((m) => m.id === memberId)?.name || null;
+  };
+
+  // Filter reports by selected member
+  const filteredReports = filterMember === "all"
+    ? reports
+    : filterMember === "myself"
+    ? reports.filter((r) => !r.member_id)
+    : reports.filter((r) => r.member_id === filterMember);
+
   // Group reports by category
   const groupedByCategory = (() => {
     const map = new Map<string, Report[]>();
-    reports.forEach((report) => {
+    filteredReports.forEach((report) => {
       const cats = getReportCategories(report);
       cats.forEach((cat) => {
         if (!map.has(cat)) map.set(cat, []);
         map.get(cat)!.push(report);
       });
     });
-    // Sort categories by worst status
     return [...map.entries()].sort((a, b) => {
       const aStatus = getWorstStatus(a[1]);
       const bStatus = getWorstStatus(b[1]);

@@ -15,48 +15,32 @@ const specialties = [
 ];
 
 const DoctorsNearMe = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
   const [customSearch, setCustomSearch] = useState("");
 
-  const openGoogleMaps = (query: string) => {
-    setLoading(true);
-    setError(null);
-
-    if (!navigator.geolocation) {
-      // Fallback without location
-      window.open(`https://www.google.com/maps/search/${query}+near+me`, "_blank");
-      setLoading(false);
-      return;
-    }
-
+  const getLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        window.open(
-          `https://www.google.com/maps/search/${query}/@${latitude},${longitude},13z`,
-          "_blank"
-        );
-        setLoading(false);
+      (pos) => {
+        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocating(false);
       },
-      () => {
-        // Fallback if denied
-        window.open(`https://www.google.com/maps/search/${query}+near+me`, "_blank");
-        setLoading(false);
-      },
+      () => setLocating(false),
       { timeout: 5000 }
     );
   };
 
-  const handleSpecialtyClick = (query: string, label: string) => {
-    setSelectedSpecialty(label);
-    openGoogleMaps(query + "+doctor");
+  const buildMapUrl = (query: string) => {
+    if (location) {
+      return `https://www.google.com/maps/search/${query}/@${location.lat},${location.lng},13z`;
+    }
+    return `https://www.google.com/maps/search/${query}+near+me`;
   };
 
   const handleCustomSearch = () => {
     if (!customSearch.trim()) return;
-    openGoogleMaps(customSearch.trim().replace(/\s+/g, "+") + "+doctor");
   };
 
   return (
@@ -77,6 +61,21 @@ const DoctorsNearMe = () => {
           <p className="mt-3 text-muted-foreground">
             Select a specialty or search for a specific type of doctor. We'll help you find nearby providers using Google Maps.
           </p>
+          {!location && (
+            <button
+              onClick={getLocation}
+              disabled={locating}
+              className="mt-4 inline-flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+            >
+              <Navigation className="h-4 w-4" />
+              {locating ? "Getting location..." : "Use my location for better results"}
+            </button>
+          )}
+          {location && (
+            <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-success">
+              <MapPin className="h-3.5 w-3.5" /> Location enabled — results will be nearby
+            </p>
+          )}
         </motion.div>
 
         {/* Custom search */}
@@ -93,18 +92,18 @@ const DoctorsNearMe = () => {
                 type="text"
                 value={customSearch}
                 onChange={(e) => setCustomSearch(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleCustomSearch()}
                 placeholder="Search for a specialty, e.g. 'orthopedic surgeon'"
                 className="w-full rounded-xl border border-input bg-card py-3 pl-10 pr-4 text-sm text-card-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
-            <button
-              onClick={handleCustomSearch}
-              disabled={!customSearch.trim()}
-              className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+            <a
+              href={customSearch.trim() ? buildMapUrl(customSearch.trim().replace(/\s+/g, "+") + "+doctor") : "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 ${!customSearch.trim() ? "pointer-events-none opacity-50" : ""}`}
             >
               <Navigation className="h-4 w-4" />
-            </button>
+            </a>
           </div>
         </motion.div>
 
@@ -117,10 +116,12 @@ const DoctorsNearMe = () => {
         >
           <h2 className="mb-4 font-display text-lg font-semibold text-foreground">Browse by Specialty</h2>
           <div className="grid gap-3 sm:grid-cols-2">
-            {specialties.map((s, i) => (
-              <button
+            {specialties.map((s) => (
+              <a
                 key={s.label}
-                onClick={() => handleSpecialtyClick(s.query, s.label)}
+                href={buildMapUrl(s.query + "+doctor")}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 text-left transition-all hover:border-primary/30 hover:shadow-sm active:scale-[0.98]"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
@@ -131,7 +132,7 @@ const DoctorsNearMe = () => {
                   <p className="text-xs text-muted-foreground">Find nearby</p>
                 </div>
                 <ExternalLink className="h-4 w-4 text-muted-foreground" />
-              </button>
+              </a>
             ))}
           </div>
         </motion.div>
@@ -160,11 +161,6 @@ const DoctorsNearMe = () => {
           </div>
         </motion.div>
 
-        {error && (
-          <div className="mt-4 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
-            {error}
-          </div>
-        )}
       </div>
     </div>
   );

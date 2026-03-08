@@ -138,7 +138,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { stat: "80%", label: "of patients struggle to understand their lab results", source: "AMA", url: "https://www.ama-assn.org/delivering-care/patient-support-advocacy/health-literacy" },
+              { stat: "80%", label: "of patients struggle to understand their lab results", source: "JMIR", url: "https://www.jmir.org/2020/12/e18725/" },
               { stat: "15 min", label: "average doctor visit — not enough to explain every result", source: "CDC", url: "https://www.cdc.gov/nchs/fastats/physician-visits.htm" },
               { stat: "77%", label: "of patients use the internet to search health info", source: "Pew Research", url: "https://www.pewresearch.org/internet/fact-sheet/internet-broadband/" },
               { stat: "47%", label: "report anxiety after receiving unexplained lab results", source: "BMJ", url: "https://www.bmj.com/content/350/bmj.g7624" },

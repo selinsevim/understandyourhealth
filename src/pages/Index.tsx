@@ -62,7 +62,7 @@ const Index = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="container mx-auto px-4 pb-20 pt-16 sm:pt-24">
+        <div className="container mx-auto px-4 pb-12 pt-16 sm:pt-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -135,8 +135,8 @@ const Index = () => {
 
       {/* The Problem + Statistics */}
       <section className="pt-0 pb-0">
-        <div className="h-32" style={{ background: "linear-gradient(180deg, hsl(var(--background)), hsl(160 40% 95%))" }} />
-        <div className="py-20" style={{ background: "hsl(160 40% 95%)" }}>
+        <div className="h-16" style={{ background: "linear-gradient(180deg, hsl(var(--background)), hsl(160 40% 95%))" }} />
+        <div className="py-14" style={{ background: "hsl(160 40% 95%)" }}>
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -193,11 +193,11 @@ const Index = () => {
             </div>
           </div>
         </div>
-        <div className="h-32" style={{ background: "linear-gradient(180deg, hsl(160 40% 95%), hsl(var(--background)))" }} />
+        <div className="h-16" style={{ background: "linear-gradient(180deg, hsl(160 40% 95%), hsl(var(--background)))" }} />
       </section>
 
       {/* Features / Solution */}
-      <section className="py-20">
+      <section className="py-14">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

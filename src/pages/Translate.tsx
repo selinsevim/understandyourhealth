@@ -257,12 +257,26 @@ const Translate = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto max-w-2xl px-4 py-12">
+        {/* Demo banner */}
+        {isDemo && (
+          <div className="mb-6 rounded-xl border border-primary/20 bg-primary/5 p-4 text-center">
+            <p className="text-sm font-medium text-primary">
+              🎉 Free Demo Mode — Try a sample report to see how MedMind works!
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              No payment or sign-up required for the demo.
+            </p>
+          </div>
+        )}
+
         <div className="text-center">
           <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-            Translate Your Report
+            {isDemo ? "Try the Demo" : "Translate Your Report"}
           </h1>
           <p className="mt-3 text-muted-foreground">
-            Paste your lab results or doctor notes below. We'll explain everything in plain English.
+            {isDemo
+              ? "See how we turn confusing lab results into plain, friendly language."
+              : "Paste your lab results or doctor notes below. We'll explain everything in plain English."}
           </p>
         </div>
 

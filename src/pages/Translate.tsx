@@ -7,6 +7,7 @@ import UploadDropzone from "@/components/UploadDropzone";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import * as pdfjsLib from "pdfjs-dist";
+import { DEMO_RESULT } from "@/data/demoResult";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
@@ -201,9 +202,12 @@ const Translate = () => {
   const handleTranslate = async () => {
     if (!reportText.trim()) return;
 
-    // Demo mode: translate for free with the sample report
+    // Demo mode: use static pre-saved result (no AI cost)
     if (isDemo && reportText.trim() === SAMPLE_REPORT.trim()) {
-      handleTranslateAfterPayment();
+      sessionStorage.setItem("medmind_result", JSON.stringify(DEMO_RESULT));
+      sessionStorage.setItem("medmind_report_text", SAMPLE_REPORT);
+      sessionStorage.removeItem("medmind_member_id");
+      navigate("/results");
       return;
     }
 

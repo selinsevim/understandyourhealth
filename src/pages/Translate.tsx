@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FileText, Upload as UploadIcon, Sparkles, Globe } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";
 import { supabase } from "@/integrations/supabase/client";
+import * as pdfjsLib from "pdfjs-dist";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
 const SAMPLE_REPORT = `CBC Results: WBC 7.2 K/uL (ref 4.5-11.0), RBC 4.8 M/uL (ref 4.2-5.4), Hemoglobin 14.2 g/dL (ref 13.5-17.5), Hematocrit 42% (ref 41-53), Platelets 320 K/uL (ref 150-400). Lipid Panel: Total Cholesterol 215 mg/dL (ref <200), LDL 142 mg/dL (ref <100), HDL 45 mg/dL (ref >40), Triglycerides 140 mg/dL (ref <150). TSH 2.1 mIU/L (ref 0.4-4.0).`;
 

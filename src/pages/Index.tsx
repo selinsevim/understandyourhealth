@@ -1,24 +1,58 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Palette, Stethoscope, Shield } from "lucide-react";
+import { ArrowRight, Sparkles, Palette, Stethoscope, Shield, AlertTriangle, Clock, Brain, HeartPulse, MessageSquareText, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
+const problems = [
+  {
+    icon: AlertTriangle,
+    title: "Jargon-Heavy Reports",
+    description: "Lab results are written for doctors, not patients. Abbreviations, units, and reference ranges make no sense to most people."
+  },
+  {
+    icon: Brain,
+    title: "Anxiety From the Unknown",
+    description: "Seeing unfamiliar numbers without context causes unnecessary stress and late-night Google spirals."
+  },
+  {
+    icon: Clock,
+    title: "Doctor Time Is Scarce",
+    description: "The average appointment is 15 minutes. There's rarely enough time to explain every single result in detail."
+  }
+];
+
 const features = [
-{
-  icon: Sparkles,
-  title: "Instant Translation",
-  description: "Paste your lab results and get a clear, friendly explanation in seconds."
-},
-{
-  icon: Palette,
-  title: "Color-Coded Results",
-  description: "Green, yellow, and red indicators show you exactly what needs attention."
-},
-{
-  icon: Stethoscope,
-  title: "Ask Your Doctor",
-  description: "Auto-generated questions to bring to your next appointment."
-}];
+  {
+    icon: Sparkles,
+    title: "Instant Translation",
+    description: "Paste your lab results and get a clear, friendly explanation in seconds — no medical degree needed."
+  },
+  {
+    icon: Palette,
+    title: "Color-Coded Results",
+    description: "Green, yellow, and red indicators show you exactly what's normal, borderline, or needs attention."
+  },
+  {
+    icon: Stethoscope,
+    title: "Smart Questions for Your Doctor",
+    description: "Auto-generated questions to bring to your next appointment so you make the most of your time."
+  },
+  {
+    icon: HeartPulse,
+    title: "Track Your Health Over Time",
+    description: "Save reports and compare results across visits to spot trends and improvements."
+  },
+  {
+    icon: Users,
+    title: "Family Profiles",
+    description: "Manage reports for your parents, kids, or partner — all in one place."
+  },
+  {
+    icon: MessageSquareText,
+    title: "Multi-Language Support",
+    description: "Get your results explained in the language you're most comfortable with."
+  }
+];
 
 
 const Index = () => {

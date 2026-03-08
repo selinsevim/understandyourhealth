@@ -216,7 +216,14 @@ const Translate = () => {
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
       if (data?.url) {
-        window.open(data.url, "_blank");
+        // Use anchor tag click to reliably open in new tab (preview iframe blocks window.open)
+        const link = document.createElement("a");
+        link.href = data.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         setPaymentLoading(false);
       }
     } catch (err: any) {

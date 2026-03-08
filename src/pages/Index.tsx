@@ -131,10 +131,13 @@ const Index = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Smooth gradient transition to problem section */}
+        <div className="h-24" style={{ background: "linear-gradient(180deg, hsl(var(--background)), hsl(270 60% 96%))" }} />
       </section>
 
       {/* The Problem + Statistics */}
-      <section className="border-t border-border py-20" style={{ background: "linear-gradient(180deg, hsl(270 60% 96%), hsl(var(--background)))" }}>
+      <section className="py-20" style={{ background: "linear-gradient(180deg, hsl(270 60% 96%), hsl(270 50% 94%), hsl(var(--background)))" }}>
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Palette, Stethoscope, Shield } from "lucide-react";
+import { ArrowRight, Sparkles, Palette, Stethoscope, Shield, MapPin } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const features = [

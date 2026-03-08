@@ -37,8 +37,9 @@ const Translate = () => {
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
 
-      // Store result in sessionStorage for results page
+      // Store result and report text in sessionStorage for results page
       sessionStorage.setItem("medmind_result", JSON.stringify(data));
+      sessionStorage.setItem("medmind_report_text", reportText.trim());
       navigate("/results");
     } catch (err: any) {
       console.error("Translation error:", err);

@@ -146,11 +146,6 @@ const DoctorsNearMe = () => {
           </div>
         </motion.div>
 
-        {error && (
-          <div className="mt-4 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-sm text-destructive">
-            {error}
-          </div>
-        )}
       </div>
     </div>
   );

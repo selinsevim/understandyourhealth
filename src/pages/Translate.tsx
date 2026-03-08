@@ -146,7 +146,7 @@ const Translate = () => {
     }
 
     if (!subscribed) {
-      setError("You need an active subscription to translate reports. Choose a plan below.");
+      setError("You need an active subscription to translate reports. Visit the pricing page to choose a plan.");
       return;
     }
 

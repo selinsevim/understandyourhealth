@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FileText, Upload as UploadIcon, Sparkles, Globe } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";
 import { supabase } from "@/integrations/supabase/client";
+import * as pdfjsLib from "pdfjs-dist";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
 const SAMPLE_REPORT = `CBC Results: WBC 7.2 K/uL (ref 4.5-11.0), RBC 4.8 M/uL (ref 4.2-5.4), Hemoglobin 14.2 g/dL (ref 13.5-17.5), Hematocrit 42% (ref 41-53), Platelets 320 K/uL (ref 150-400). Lipid Panel: Total Cholesterol 215 mg/dL (ref <200), LDL 142 mg/dL (ref <100), HDL 45 mg/dL (ref >40), Triglycerides 140 mg/dL (ref <150). TSH 2.1 mIU/L (ref 0.4-4.0).`;
 
@@ -29,6 +32,7 @@ const Translate = () => {
   const [conditions, setConditions] = useState("");
   const [language, setLanguage] = useState("en");
   const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -38,6 +42,36 @@ const Translate = () => {
       setReportText(SAMPLE_REPORT);
     }
   }, [searchParams]);
+
+  const handleFileSelect = useCallback(async (file: File) => {
+    setPdfLoading(true);
+    setError(null);
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const textParts: string[] = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const pageText = content.items
+          .map((item: any) => item.str)
+          .join(" ");
+        textParts.push(pageText);
+      }
+      const extracted = textParts.join("\n\n").trim();
+      if (!extracted) {
+        setError("Could not extract text from this PDF. It may be a scanned image — try pasting the text instead.");
+      } else {
+        setReportText(extracted);
+        setTab("paste"); // switch to paste tab so user can see/edit extracted text
+      }
+    } catch (err) {
+      console.error("PDF parse error:", err);
+      setError("Failed to read this PDF. Please try pasting the text instead.");
+    } finally {
+      setPdfLoading(false);
+    }
+  }, []);
 
   const handleTranslate = async () => {
     if (!reportText.trim()) return;
@@ -127,7 +161,14 @@ const Translate = () => {
               </button>
             </div>
           ) : (
-            <UploadDropzone onFileSelect={() => {}} />
+            <div>
+              <UploadDropzone onFileSelect={handleFileSelect} />
+              {pdfLoading && (
+                <p className="mt-3 text-center text-sm text-muted-foreground animate-pulse">
+                  Extracting text from PDF…
+                </p>
+              )}
+            </div>
           )}
         </div>
 

@@ -46,6 +46,7 @@ const Translate = () => {
   const [selectedMemberId, setSelectedMemberId] = useState<string>("");
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();

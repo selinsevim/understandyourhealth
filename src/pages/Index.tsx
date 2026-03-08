@@ -59,7 +59,7 @@ const Index = () => {
                 to="/translate?demo=true"
                 className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3.5 text-sm font-medium text-card-foreground transition-colors hover:bg-muted">
                 
-                ✨ Try Free Demo
+                Try Free Demo
               </Link>
             </div>
           </motion.div>

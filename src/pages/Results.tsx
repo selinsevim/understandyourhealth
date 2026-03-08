@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import OverallSummaryBanner from "@/components/OverallSummaryBanner";
 import ReportCard from "@/components/ReportCard";
 import QuestionCard from "@/components/QuestionCard";
+import ResultsDonutChart from "@/components/ResultsDonutChart";
 
 interface TranslationResult {
   overallStatus: "all_clear" | "watch" | "concern";

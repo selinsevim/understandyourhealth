@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { FileText, Upload as UploadIcon, Sparkles, Globe } from "lucide-react";
+import { FileText, Upload as UploadIcon, Sparkles, Globe, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import * as pdfjsLib from "pdfjs-dist";
 
@@ -25,6 +26,13 @@ const LANGUAGES = [
   { code: "ko", label: "한국어", flag: "🇰🇷" },
 ];
 
+interface FamilyMember {
+  id: string;
+  name: string;
+  age: string | null;
+  conditions: string | null;
+}
+
 const Translate = () => {
   const [tab, setTab] = useState<"paste" | "upload">("paste");
   const [reportText, setReportText] = useState("");
@@ -34,8 +42,11 @@ const Translate = () => {
   const [loading, setLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [members, setMembers] = useState<FamilyMember[]>([]);
+  const [selectedMemberId, setSelectedMemberId] = useState<string>("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (searchParams.get("sample") === "true") {

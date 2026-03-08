@@ -101,10 +101,12 @@ const DoctorsNearMe = () => {
         >
           <h2 className="mb-4 font-display text-lg font-semibold text-foreground">Browse by Specialty</h2>
           <div className="grid gap-3 sm:grid-cols-2">
-            {specialties.map((s, i) => (
-              <button
+            {specialties.map((s) => (
+              <a
                 key={s.label}
-                onClick={() => handleSpecialtyClick(s.query, s.label)}
+                href={buildMapUrl(s.query + "+doctor")}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 text-left transition-all hover:border-primary/30 hover:shadow-sm active:scale-[0.98]"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
@@ -115,7 +117,7 @@ const DoctorsNearMe = () => {
                   <p className="text-xs text-muted-foreground">Find nearby</p>
                 </div>
                 <ExternalLink className="h-4 w-4 text-muted-foreground" />
-              </button>
+              </a>
             ))}
           </div>
         </motion.div>

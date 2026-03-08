@@ -7,6 +7,7 @@ import OverallSummaryBanner from "@/components/OverallSummaryBanner";
 import ReportCard from "@/components/ReportCard";
 import QuestionCard from "@/components/QuestionCard";
 import ResultsDonutChart from "@/components/ResultsDonutChart";
+import CategoryHeader from "@/components/CategoryHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ interface TranslationResult {
   overallStatus: "all_clear" | "watch" | "concern";
   overallSummary: string;
   sections: {
+    category?: string;
     sectionName: string;
     items: {
       testName: string;
@@ -119,12 +121,43 @@ const Results = () => {
           <ResultsDonutChart sections={result.sections} />
         </motion.div>
 
-        <div className="mt-8 space-y-6">
-          {sortedSections.map((section, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
-              <ReportCard section={section} />
-            </motion.div>
-          ))}
+        <div className="mt-8 space-y-8">
+          {(() => {
+            const grouped = new Map<string, typeof sortedSections>();
+            sortedSections.forEach((section) => {
+              const cat = section.category || "Other";
+              if (!grouped.has(cat)) grouped.set(cat, []);
+              grouped.get(cat)!.push(section);
+            });
+            // Sort categories by worst status within
+            const catEntries = [...grouped.entries()].sort((a, b) => {
+              const aMin = Math.min(...a[1].flatMap(s => s.items.map(i => statusPriority[i.status])));
+              const bMin = Math.min(...b[1].flatMap(s => s.items.map(i => statusPriority[i.status])));
+              return aMin - bMin;
+            });
+            let delay = 0;
+            return catEntries.map(([category, sections]) => {
+              const worstStatus = Math.min(...sections.flatMap(s => s.items.map(i => statusPriority[i.status])));
+              const catStatus = worstStatus === 0 ? "concern" : worstStatus === 1 ? "watch" : "normal";
+              return (
+                <div key={category} className="space-y-4">
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * delay }}>
+                    <CategoryHeader category={category} status={catStatus as "normal" | "watch" | "concern"} />
+                  </motion.div>
+                  <div className="space-y-4 pl-0 sm:pl-2">
+                    {sections.map((section, i) => {
+                      delay++;
+                      return (
+                        <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * delay }}>
+                          <ReportCard section={section} />
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            });
+          })()}
         </div>
 
         {result.keyTakeaways.length > 0 && (

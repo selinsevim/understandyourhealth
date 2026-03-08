@@ -133,6 +133,32 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Statistics */}
+      <section className="border-t border-border bg-muted/30 py-16">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { stat: "80%", label: "of patients struggle to understand their lab results", source: "AMA" },
+              { stat: "15 min", label: "average doctor visit — not enough to explain every result", source: "CDC" },
+              { stat: "77%", label: "of patients use the internet to search health info", source: "Pew Research" },
+              { stat: "47%", label: "report anxiety after receiving unexplained lab results", source: "BMJ" },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="text-center">
+                <p className="font-display text-4xl font-bold text-primary">{item.stat}</p>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.label}</p>
+                <p className="mt-1 text-xs text-muted-foreground/60">— {item.source}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* The Problem */}
       <section className="border-t border-border py-20">
         <div className="container mx-auto px-4">

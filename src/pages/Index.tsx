@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Palette, Stethoscope, Shield } from "lucide-react";
+import { ArrowRight, Sparkles, Palette, Stethoscope, Shield, MapPin } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const features = [
@@ -18,6 +18,11 @@ const features = [
     icon: Stethoscope,
     title: "Ask Your Doctor",
     description: "Auto-generated questions to bring to your next appointment.",
+  },
+  {
+    icon: MapPin,
+    title: "Find Doctors Near You",
+    description: "Locate nearby specialists based on your results with one click.",
   },
 ];
 

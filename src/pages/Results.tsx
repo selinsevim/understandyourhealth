@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, RefreshCw, Download, BookmarkPlus, ListChecks, MessageCircleQuestion } from "lucide-react";
+import { ArrowLeft, RefreshCw, Download, BookmarkPlus, ListChecks, MessageCircleQuestion, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import OverallSummaryBanner from "@/components/OverallSummaryBanner";
 import ReportCard from "@/components/ReportCard";
 import QuestionCard from "@/components/QuestionCard";
 import ResultsDonutChart from "@/components/ResultsDonutChart";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface TranslationResult {
   overallStatus: "all_clear" | "watch" | "concern";
@@ -30,7 +33,10 @@ interface TranslationResult {
 
 const Results = () => {
   const [result, setResult] = useState<TranslationResult | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const stored = sessionStorage.getItem("medmind_result");
@@ -45,13 +51,41 @@ const Results = () => {
     }
   }, [navigate]);
 
+  const handleSave = async () => {
+    if (!user) {
+      toast.error("Please sign in to save reports");
+      navigate("/auth");
+      return;
+    }
+    if (!result) return;
+
+    setSaving(true);
+    try {
+      const reportText = sessionStorage.getItem("medmind_report_text") || "Imported report";
+      const { error } = await supabase.from("reports").insert({
+        user_id: user.id,
+        report_text: reportText,
+        result: result as any,
+        overall_status: result.overallStatus,
+        title: result.sections[0]?.sectionName || "Lab Report",
+      });
+      if (error) throw error;
+      setSaved(true);
+      toast.success("Report saved to your history!");
+    } catch (err: any) {
+      toast.error("Failed to save report");
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (!result) return null;
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto max-w-3xl px-4 py-8">
-        {/* Back */}
         <button
           onClick={() => navigate("/translate")}
           className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -60,38 +94,24 @@ const Results = () => {
           Back to translate
         </button>
 
-        {/* Overall Summary */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <OverallSummaryBanner status={result.overallStatus} summary={result.overallSummary} />
         </motion.div>
 
-        {/* Donut Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-6">
           <ResultsDonutChart sections={result.sections} />
         </motion.div>
 
-        {/* Report Sections */}
         <div className="mt-8 space-y-6">
           {result.sections.map((section, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * i }}
-            >
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
               <ReportCard section={section} />
             </motion.div>
           ))}
         </div>
 
-        {/* Key Takeaways */}
         {result.keyTakeaways.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-8 rounded-2xl border border-border bg-card p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-8 rounded-2xl border border-border bg-card p-6">
             <div className="mb-4 flex items-center gap-2">
               <ListChecks className="h-5 w-5 text-primary" />
               <h3 className="font-display text-lg font-semibold text-card-foreground">What This Means For You</h3>
@@ -107,14 +127,8 @@ const Results = () => {
           </motion.div>
         )}
 
-        {/* Questions for Doctor */}
         {result.questionsForDoctor.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mt-8"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-8">
             <div className="mb-4 flex items-center gap-2">
               <MessageCircleQuestion className="h-5 w-5 text-primary" />
               <h3 className="font-display text-lg font-semibold text-foreground">Questions to Ask Your Doctor</h3>
@@ -127,14 +141,8 @@ const Results = () => {
           </motion.div>
         )}
 
-        {/* Action Items */}
         {result.actionItems.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8 rounded-2xl border border-warning/30 bg-warning/5 p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-8 rounded-2xl border border-warning/30 bg-warning/5 p-6">
             <h3 className="mb-3 font-display text-lg font-semibold text-foreground">Action Items</h3>
             <ol className="space-y-2">
               {result.actionItems.map((item, i) => (
@@ -149,7 +157,6 @@ const Results = () => {
           </motion.div>
         )}
 
-        {/* Bottom Actions */}
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link
             to="/translate"
@@ -159,9 +166,13 @@ const Results = () => {
             <RefreshCw className="h-4 w-4" />
             Translate Another Report
           </Link>
-          <button className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-medium text-card-foreground transition-colors hover:bg-muted">
-            <BookmarkPlus className="h-4 w-4" />
-            Save This Report
+          <button
+            onClick={handleSave}
+            disabled={saving || saved}
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-medium text-card-foreground transition-colors hover:bg-muted disabled:opacity-50"
+          >
+            {saved ? <Check className="h-4 w-4 text-primary" /> : <BookmarkPlus className="h-4 w-4" />}
+            {saved ? "Saved!" : saving ? "Saving..." : "Save This Report"}
           </button>
           <button className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-medium text-card-foreground transition-colors hover:bg-muted">
             <Download className="h-4 w-4" />

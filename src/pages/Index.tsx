@@ -43,8 +43,8 @@ const Index = () => {
               Understand your health results —{" "}
               <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-hero)" }}>finally.</span>
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Paste your lab report or doctor notes. We'll explain everything in plain English — like a caring friend who happens to be a doctor.
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">Paste your lab report or doctor notes. We'll explain everything in plain human language — like a caring friend who happens to be a doctor.
+
             </p>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link

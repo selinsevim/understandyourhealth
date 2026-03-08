@@ -62,15 +62,22 @@ const History = () => {
       setLoading(false);
       return;
     }
-    const fetchReports = async () => {
-      const { data, error } = await supabase
-        .from("reports")
-        .select("id, title, overall_status, created_at, result")
-        .order("created_at", { ascending: false });
-      if (!error && data) setReports(data);
+    const fetchData = async () => {
+      const [reportsRes, membersRes] = await Promise.all([
+        supabase
+          .from("reports")
+          .select("id, title, overall_status, created_at, result, member_id")
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("family_members")
+          .select("id, name")
+          .order("created_at", { ascending: true }),
+      ]);
+      if (!reportsRes.error && reportsRes.data) setReports(reportsRes.data);
+      if (!membersRes.error && membersRes.data) setMembers(membersRes.data);
       setLoading(false);
     };
-    fetchReports();
+    fetchData();
   }, [user, authLoading]);
 
   const handleView = (report: Report) => {

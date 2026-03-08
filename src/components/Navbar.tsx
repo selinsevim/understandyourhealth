@@ -13,6 +13,7 @@ const Navbar = () => {
   const links = [
     { to: "/", label: "Home" },
     { to: "/translate", label: "Translate" },
+    { to: "/pricing", label: "Pricing" },
     { to: "/history", label: "History" },
     { to: "/appointments", label: "Appointments" },
     { to: "/family", label: "Family" },

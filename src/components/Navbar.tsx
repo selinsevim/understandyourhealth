@@ -1,17 +1,25 @@
-import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Heart, Menu, X, LogIn, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const links = [
     { to: "/", label: "Home" },
     { to: "/translate", label: "Translate" },
     { to: "/history", label: "History" },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
@@ -38,12 +46,29 @@ const Navbar = () => {
               {l.label}
             </Link>
           ))}
-          <Link
-            to="/translate"
-            className="ml-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Translate Report
-          </Link>
+          {user ? (
+            <div className="ml-2 flex items-center gap-2">
+              <span className="flex items-center gap-1.5 rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground">
+                <User className="h-3.5 w-3.5" />
+                {user.email?.split("@")[0]}
+              </span>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="ml-2 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              <LogIn className="h-4 w-4" />
+              Sign In
+            </Link>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -75,6 +100,22 @@ const Navbar = () => {
                   {l.label}
                 </Link>
               ))}
+              {user ? (
+                <button
+                  onClick={() => { handleSignOut(); setOpen(false); }}
+                  className="rounded-lg px-4 py-2 text-left text-sm font-medium text-muted-foreground"
+                >
+                  Sign out
+                </button>
+              ) : (
+                <Link
+                  to="/auth"
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-4 py-2 text-sm font-medium text-primary"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </motion.div>
         )}

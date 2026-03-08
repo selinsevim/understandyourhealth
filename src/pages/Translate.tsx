@@ -43,6 +43,36 @@ const Translate = () => {
     }
   }, [searchParams]);
 
+  const handleFileSelect = useCallback(async (file: File) => {
+    setPdfLoading(true);
+    setError(null);
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const textParts: string[] = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const pageText = content.items
+          .map((item: any) => item.str)
+          .join(" ");
+        textParts.push(pageText);
+      }
+      const extracted = textParts.join("\n\n").trim();
+      if (!extracted) {
+        setError("Could not extract text from this PDF. It may be a scanned image — try pasting the text instead.");
+      } else {
+        setReportText(extracted);
+        setTab("paste"); // switch to paste tab so user can see/edit extracted text
+      }
+    } catch (err) {
+      console.error("PDF parse error:", err);
+      setError("Failed to read this PDF. Please try pasting the text instead.");
+    } finally {
+      setPdfLoading(false);
+    }
+  }, []);
+
   const handleTranslate = async () => {
     if (!reportText.trim()) return;
     setLoading(true);

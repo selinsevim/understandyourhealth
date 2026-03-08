@@ -101,6 +101,10 @@ const Translate = () => {
     if (searchParams.get("sample") === "true") {
       setReportText(SAMPLE_REPORT);
     }
+    if (searchParams.get("demo") === "true") {
+      setReportText(SAMPLE_REPORT);
+      setIsDemo(true);
+    }
   }, [searchParams]);
 
   // Fetch family members

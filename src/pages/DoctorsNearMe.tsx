@@ -15,48 +15,32 @@ const specialties = [
 ];
 
 const DoctorsNearMe = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
   const [customSearch, setCustomSearch] = useState("");
 
-  const openGoogleMaps = (query: string) => {
-    setLoading(true);
-    setError(null);
-
-    if (!navigator.geolocation) {
-      // Fallback without location
-      window.open(`https://www.google.com/maps/search/${query}+near+me`, "_blank");
-      setLoading(false);
-      return;
-    }
-
+  const getLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        window.open(
-          `https://www.google.com/maps/search/${query}/@${latitude},${longitude},13z`,
-          "_blank"
-        );
-        setLoading(false);
+      (pos) => {
+        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocating(false);
       },
-      () => {
-        // Fallback if denied
-        window.open(`https://www.google.com/maps/search/${query}+near+me`, "_blank");
-        setLoading(false);
-      },
+      () => setLocating(false),
       { timeout: 5000 }
     );
   };
 
-  const handleSpecialtyClick = (query: string, label: string) => {
-    setSelectedSpecialty(label);
-    openGoogleMaps(query + "+doctor");
+  const buildMapUrl = (query: string) => {
+    if (location) {
+      return `https://www.google.com/maps/search/${query}/@${location.lat},${location.lng},13z`;
+    }
+    return `https://www.google.com/maps/search/${query}+near+me`;
   };
 
   const handleCustomSearch = () => {
     if (!customSearch.trim()) return;
-    openGoogleMaps(customSearch.trim().replace(/\s+/g, "+") + "+doctor");
   };
 
   return (

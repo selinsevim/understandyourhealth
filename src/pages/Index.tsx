@@ -133,10 +133,24 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Statistics */}
-      <section className="border-t border-border bg-muted/30 py-16">
+      {/* The Problem + Statistics */}
+      <section className="border-t border-border py-20" style={{ background: "linear-gradient(180deg, hsl(270 60% 96%), hsl(var(--background)))" }}>
         <div className="container mx-auto px-4">
-          <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mx-auto max-w-2xl text-center mb-14">
+            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+              The problem is clear
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg">
+              Millions of people receive lab results they can't understand — and the system isn't built to help.
+            </p>
+          </motion.div>
+
+          {/* Stats row */}
+          <div className="mx-auto grid max-w-4xl gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-14">
             {[
               { stat: "80%", label: "of patients struggle to understand their lab results", source: "JMIR", url: "https://www.jmir.org/2020/12/e18725/" },
               { stat: "15 min", label: "average doctor visit — not enough to explain every result", source: "CDC", url: "https://www.cdc.gov/nchs/fastats/physician-visits.htm" },
@@ -150,30 +164,14 @@ const Index = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className="text-center">
-                <p className="font-display text-4xl font-bold text-primary">{item.stat}</p>
+                <p className="font-display text-4xl font-bold bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(135deg, hsl(270 70% 55%), hsl(280 80% 65%))" }}>{item.stat}</p>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.label}</p>
                 <a href={item.url} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-xs text-primary/60 underline underline-offset-2 hover:text-primary transition-colors">— {item.source}</a>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* The Problem */}
-      <section className="border-t border-border py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mx-auto max-w-2xl text-center mb-12">
-            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-              The problem is clear
-            </h2>
-            <p className="mt-4 text-muted-foreground text-lg">
-              Millions of people receive lab results they can't understand — and the system isn't built to help.
-            </p>
-          </motion.div>
+          {/* Problem cards */}
           <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-3">
             {problems.map((p, i) =>
               <motion.div
@@ -182,9 +180,9 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-destructive/10">
-                  <p.icon className="h-6 w-6 text-destructive" />
+                className="rounded-2xl border p-6" style={{ borderColor: "hsl(270 60% 70% / 0.25)", background: "linear-gradient(135deg, hsl(270 60% 97%), hsl(280 50% 95%))" }}>
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: "hsl(270 60% 90%)" }}>
+                  <p.icon className="h-6 w-6" style={{ color: "hsl(270 70% 50%)" }} />
                 </div>
                 <h3 className="font-display text-lg font-semibold text-card-foreground">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.description}</p>

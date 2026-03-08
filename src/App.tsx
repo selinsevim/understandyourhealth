@@ -10,6 +10,7 @@ import Results from "./pages/Results";
 import History from "./pages/History";
 import FamilyMembers from "./pages/FamilyMembers";
 import Appointments from "./pages/Appointments";
+import Pricing from "./pages/Pricing";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/history" element={<History />} />
             <Route path="/family" element={<FamilyMembers />} />
             <Route path="/appointments" element={<Appointments />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

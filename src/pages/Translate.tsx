@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { FileText, Upload as UploadIcon, Sparkles, Globe, Users } from "lucide-react";
+import { FileText, Upload as UploadIcon, Sparkles, Globe, Users, CreditCard } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import UploadDropzone from "@/components/UploadDropzone";
@@ -44,9 +44,57 @@ const Translate = () => {
   const [error, setError] = useState<string | null>(null);
   const [members, setMembers] = useState<FamilyMember[]>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<string>("");
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
+
+  // Check for payment success callback
+  useEffect(() => {
+    const payment = searchParams.get("payment");
+    const sessionId = searchParams.get("session_id");
+
+    if (payment === "success" && sessionId) {
+      // Verify payment
+      const verifyPayment = async () => {
+        try {
+          const { data, error } = await supabase.functions.invoke("verify-payment", {
+            body: { sessionId },
+          });
+          if (data?.paid) {
+            setIsPaid(true);
+            // Restore form data from sessionStorage
+            const savedText = sessionStorage.getItem("medmind_pending_report");
+            const savedAge = sessionStorage.getItem("medmind_pending_age");
+            const savedConditions = sessionStorage.getItem("medmind_pending_conditions");
+            const savedLanguage = sessionStorage.getItem("medmind_pending_language");
+            const savedMemberId = sessionStorage.getItem("medmind_pending_member_id");
+            if (savedText) setReportText(savedText);
+            if (savedAge) setAge(savedAge);
+            if (savedConditions) setConditions(savedConditions);
+            if (savedLanguage) setLanguage(savedLanguage);
+            if (savedMemberId) setSelectedMemberId(savedMemberId);
+            // Clean up URL params
+            setSearchParams({});
+          }
+        } catch (err) {
+          console.error("Payment verification failed:", err);
+        }
+      };
+      verifyPayment();
+    } else if (payment === "cancelled") {
+      setError("Payment was cancelled. You can try again when you're ready.");
+      setSearchParams({});
+    }
+  }, [searchParams, setSearchParams]);
+
+  // Auto-translate after successful payment verification
+  useEffect(() => {
+    if (isPaid && reportText.trim()) {
+      handleTranslateAfterPayment();
+    }
+  }, [isPaid]);
 
   useEffect(() => {
     if (searchParams.get("sample") === "true") {
@@ -67,7 +115,6 @@ const Translate = () => {
     fetch();
   }, [user]);
 
-  // Auto-fill age/conditions when member selected
   const handleMemberSelect = (memberId: string) => {
     setSelectedMemberId(memberId);
     if (memberId === "") {
@@ -102,7 +149,7 @@ const Translate = () => {
         setError("Could not extract text from this PDF. It may be a scanned image — try pasting the text instead.");
       } else {
         setReportText(extracted);
-        setTab("paste"); // switch to paste tab so user can see/edit extracted text
+        setTab("paste");
       }
     } catch (err) {
       console.error("PDF parse error:", err);
@@ -112,7 +159,7 @@ const Translate = () => {
     }
   }, []);
 
-  const handleTranslate = async () => {
+  const handleTranslateAfterPayment = async () => {
     if (!reportText.trim()) return;
     setLoading(true);
     setError(null);
@@ -125,17 +172,56 @@ const Translate = () => {
       if (fnError) throw fnError;
       if (data?.error) throw new Error(data.error);
 
-      // Store result, report text, and member_id in sessionStorage for results page
       sessionStorage.setItem("medmind_result", JSON.stringify(data));
       sessionStorage.setItem("medmind_report_text", reportText.trim());
       if (selectedMemberId) sessionStorage.setItem("medmind_member_id", selectedMemberId);
       else sessionStorage.removeItem("medmind_member_id");
+
+      // Clean up pending data
+      sessionStorage.removeItem("medmind_pending_report");
+      sessionStorage.removeItem("medmind_pending_age");
+      sessionStorage.removeItem("medmind_pending_conditions");
+      sessionStorage.removeItem("medmind_pending_language");
+      sessionStorage.removeItem("medmind_pending_member_id");
+
       navigate("/results");
     } catch (err: any) {
       console.error("Translation error:", err);
       setError("We had trouble reading this report. Try pasting just a section at a time.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTranslate = async () => {
+    if (!reportText.trim()) return;
+
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+
+    // Save form data before redirecting to payment
+    sessionStorage.setItem("medmind_pending_report", reportText.trim());
+    sessionStorage.setItem("medmind_pending_age", age);
+    sessionStorage.setItem("medmind_pending_conditions", conditions);
+    sessionStorage.setItem("medmind_pending_language", language);
+    if (selectedMemberId) sessionStorage.setItem("medmind_pending_member_id", selectedMemberId);
+
+    setPaymentLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("create-payment");
+      if (fnError) throw fnError;
+      if (data?.error) throw new Error(data.error);
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err: any) {
+      console.error("Payment error:", err);
+      setError("Could not start the payment process. Please try again.");
+      setPaymentLoading(false);
     }
   };
 
@@ -304,14 +390,15 @@ const Translate = () => {
         {/* CTA */}
         <button
           onClick={handleTranslate}
-          disabled={!reportText.trim()}
-          className="mt-8 w-full rounded-xl bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!reportText.trim() || paymentLoading}
+          className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Translate My Report
+          <CreditCard className="h-5 w-5" />
+          {paymentLoading ? "Redirecting to payment…" : "Translate My Report — €1.50"}
         </button>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          🔒 Your report is processed securely and never stored without your permission.
+          🔒 Secure payment via Stripe. Your report is processed securely and never stored without your permission.
         </p>
       </div>
     </div>

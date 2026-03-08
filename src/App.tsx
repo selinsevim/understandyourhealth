@@ -7,7 +7,6 @@ import Index from "./pages/Index";
 import Translate from "./pages/Translate";
 import Results from "./pages/Results";
 import History from "./pages/History";
-import DoctorsNearMe from "./pages/DoctorsNearMe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,7 +22,7 @@ const App = () => (
           <Route path="/translate" element={<Translate />} />
           <Route path="/results" element={<Results />} />
           <Route path="/history" element={<History />} />
-          <Route path="/doctors" element={<DoctorsNearMe />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

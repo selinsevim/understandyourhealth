@@ -38,7 +38,7 @@ const UploadDropzone = ({ onFileSelect }: Props) => {
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed px-6 py-12 transition-colors ${
+      className={`relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed px-6 py-12 transition-colors ${
         dragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
       }`}
     >

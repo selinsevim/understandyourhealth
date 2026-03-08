@@ -52,6 +52,8 @@ const History = () => {
   const { user, loading: authLoading } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState<FamilyMember[]>([]);
+  const [filterMember, setFilterMember] = useState<string>("all");
   const navigate = useNavigate();
 
   useEffect(() => {

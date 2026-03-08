@@ -71,7 +71,7 @@ const Index = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mx-auto mt-16 max-w-2xl">
             
-            <div className="relative rounded-2xl border border-border bg-card p-6 shadow-lg">
+            <div className="relative rounded-2xl border border-border bg-card p-6 shadow-lg" style={{ background: "var(--gradient-soft)", borderColor: "hsl(var(--purple-glow) / 0.2)" }}>
               <div className="flex items-center gap-4">
                 <div className="flex-1 rounded-lg bg-muted p-4">
                   <p className="font-mono text-xs text-muted-foreground">

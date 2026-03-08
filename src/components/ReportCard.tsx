@@ -1,5 +1,5 @@
 import LabValueRow from "./LabValueRow";
-import { Beaker } from "lucide-react";
+import { Beaker, Heart, Droplets, Activity, Brain, Bone, Eye, type LucideIcon } from "lucide-react";
 
 interface ReportSection {
   sectionName: string;

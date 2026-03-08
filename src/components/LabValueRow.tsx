@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import StatusBadge from "./StatusBadge";
+import LabValueGauge from "./LabValueGauge";
 
 interface LabItem {
   testName: string;
@@ -24,6 +25,7 @@ const LabValueRow = ({ item }: { item: LabItem }) => {
             <span className="text-xs text-muted-foreground">({item.originalName})</span>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">{item.simpleExplanation}</p>
+          <LabValueGauge value={item.value} normalRange={item.normalRange} status={item.status} />
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right text-sm">

@@ -54,6 +54,34 @@ const Translate = () => {
     }
   }, [searchParams]);
 
+  // Fetch family members
+  useEffect(() => {
+    if (!user) return;
+    const fetch = async () => {
+      const { data } = await supabase
+        .from("family_members")
+        .select("id, name, age, conditions")
+        .order("created_at", { ascending: true });
+      if (data) setMembers(data);
+    };
+    fetch();
+  }, [user]);
+
+  // Auto-fill age/conditions when member selected
+  const handleMemberSelect = (memberId: string) => {
+    setSelectedMemberId(memberId);
+    if (memberId === "") {
+      setAge("");
+      setConditions("");
+      return;
+    }
+    const member = members.find((m) => m.id === memberId);
+    if (member) {
+      setAge(member.age || "");
+      setConditions(member.conditions || "");
+    }
+  };
+
   const handleFileSelect = useCallback(async (file: File) => {
     setPdfLoading(true);
     setError(null);
